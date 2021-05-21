@@ -65,6 +65,7 @@ const BusListScreen = ({navigation}) => {
                                 </View>
                             </TouchableOpacity>
                         </View>
+                        // Need a callback to previous screen
                     )
                 }}
             />
