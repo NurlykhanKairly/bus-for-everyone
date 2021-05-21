@@ -8,6 +8,7 @@ export default class Test extends Component {
                 <TouchableOpacity>
                     <Text onPress={() => this.props.navigation.navigate("Register")}>Register</Text>
                     <Text onPress={() => this.props.navigation.navigate("Login")}>Login</Text>
+                    <Text onPress={() => this.props.navigation.navigate("GooglePlacesInput")}>GooglePlacesInput</Text>
                 </TouchableOpacity>
             </View>
         )
