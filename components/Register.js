@@ -6,16 +6,20 @@ import {
     TextInput,
     KeyboardAvoidingView,
     TouchableOpacity,
-    AsyncStorage,
     Platform,
     ActivityIndicator,
 } from 'react-native';
+import Constants from 'expo-constants';
 
+import * as Notifications from 'expo-notifications';
+
+import GLOBALS from '../Globals';
 
 export default class Register extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            email: '',
             username: '',
             password: '',
             confirmPassword: '',
@@ -23,11 +27,43 @@ export default class Register extends React.Component {
         };
     }
 
-    async componentDidMount() {
+    
+    async registerForPushNotificationsAsync() {
+        let token;
+        if (Constants.isDevice) {
+          const { status: existingStatus } = await Notifications.getPermissionsAsync();
+          let finalStatus = existingStatus;
+          if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+          }
+          if (finalStatus !== 'granted') {
+            alert('Failed to get push token for push notification!');
+            return;
+          }
+          token = (await Notifications.getExpoPushTokenAsync()).data;
+          if (Platform.OS === 'android') {
+            Notifications.setNotificationChannelAsync('default', {
+              name: 'default',
+              importance: Notifications.AndroidImportance.MAX,
+              vibrationPattern: [0, 250, 250, 250],
+              lightColor: '#FF231F7C',
+            });
+          }
+          return token;
+        } else {
+          alert('Must use physical device for Push Notifications');
+        }
+      
+        
+      
+        return token;
+      }
+
+      async componentDidMount() {
         this.setState({ assetsLoaded: true });
     }
-
-
+      
     render() {
         if (!this.state.assetsLoaded) {
             return (
@@ -45,10 +81,16 @@ export default class Register extends React.Component {
                         placeholder="Enter e-mail"
                         autoCapitalize="none"
                         keyboardType="email-address"
+                        onChangeText={email => this.setState({ email })}
+                        underlineColorAndroid="transparent"
+                    />
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder="Enter username"
+                        autoCapitalize="none"
                         onChangeText={username => this.setState({ username })}
                         underlineColorAndroid="transparent"
                     />
-
                     <TextInput
                         style={styles.textInput}
                         placeholder="Enter password"
@@ -66,12 +108,50 @@ export default class Register extends React.Component {
                     <TouchableOpacity style={styles.btn} onPress={this.register}>
                         <Text style={styles.buttonText}>register</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity style={{marginTop: 20, ...styles.btn}} onPress={() => this.props.navigation.navigate('Login')}>
+                        <Text style={styles.buttonText}>login</Text>
+                    </TouchableOpacity>
+
                 </View>
             </KeyboardAvoidingView>
         );
     }
-    register = () => {
-        ///TODO
+    register = async () => {
+        if (this.state.confirmPassword !== this.state.password) {
+            alert("Something went wrong...");
+            return;
+        }
+        let token = await this.registerForPushNotificationsAsync();
+        console.log(token);
+        fetch(GLOBALS.BASE_URL + '/auth1/registerPassenger/', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email : this.state.email,
+              username : this.state.username,
+              password : this.state.password,
+              token : token
+            }),
+          })
+            .then(res => {
+              if (res.status === 200) {
+                return true;
+              } else {
+                alert("Something went wrong...");
+                return false;
+              }
+            })
+            .then((success) => {
+              if (success)
+                this.props.navigation.navigate('Login');
+            })
+            .catch((err) => {
+              alert(err);
+            })
+            .done();      
     };
 }
 
