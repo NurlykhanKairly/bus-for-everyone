@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Test from './components/Test';
 import GooglePlacesInput from './components/GooglePlacesInput';
+import BusInfo from './components/BusInfo';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ export default function App() {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="GooglePlacesInput" component={GooglePlacesInput} />
+      <Stack.Screen name="BusInfo" component={BusInfo} />
       </Stack.Navigator>
     </NavigationContainer>
   );
