@@ -47,7 +47,6 @@ class FeedbackViewSet(viewsets.ModelViewSet):
         serializer.save()
 
     def perform_create(self, serializer):
-        print("CRARET")
         return serializer.save(created_by=self.request.user)
 
     def destroy(self, request, *args, **kwargs):

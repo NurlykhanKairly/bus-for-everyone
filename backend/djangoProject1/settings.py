@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+
 from pathlib import Path
 import datetime
 import os
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework_jwt',
     'auth1',
     'api',
+    "fcm_django",
     'corsheaders',
 ]
 
@@ -55,7 +57,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
-
 CORS_ORIGIN_ALLOW_ALL = True
 
 MIDDLEWARE = [
@@ -69,6 +70,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+FCM_DJANGO_SETTINGS = {
+    "FCM_SERVER_KEY": "AAAArezFDUA:APA91bEMaoY_JDoloGsQ0LkNRGVBfQpgjA76AuA2E69LWXOQTL98L17kYOxli4g2t31DM4GlANvaMyZyMMHGgllLn-WDdzm_D4a8xdu44yVJBhbdaIGNJCjb0IjdO-q1Fd1LWookRCnJ",
+    # true if you want to have only one active device per registered user at a time
+    # default: False
+    "ONE_DEVICE_PER_USER": False,
+    # devices to which notifications cannot be sent,
+    # are deleted upon receiving error response from FCM
+    # default: False
+    "DELETE_INACTIVE_DEVICES": True,
+}
 
 ROOT_URLCONF = 'djangoProject1.urls'
 

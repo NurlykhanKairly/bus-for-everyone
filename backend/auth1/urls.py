@@ -11,7 +11,7 @@ urlpatterns = [
     path('login/', obtain_jwt_token),
     path('registerDriver/', RegisterDriverAPIView.as_view()),
     path('registerPassenger/', RegisterPassengerAPIView.as_view()),
-    path('generate/', GenerateRegisterAPIView)
+    path('getToken/', GetToken.as_view()),
 ]
 
 router = DefaultRouter()

@@ -6,6 +6,7 @@ class User(AbstractUser):
     isDriver = models.BooleanField(default=False)
     years = models.IntegerField(default=0)
     isSpecial = models.BooleanField(default=False)
+    token = models.CharField(max_length=255)
 
     class Meta:
         verbose_name = 'User'

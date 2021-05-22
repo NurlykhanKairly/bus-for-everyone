@@ -4,16 +4,24 @@ from django.db import transaction
 import logging
 
 
+class UserRegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password', 'token')
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
-
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
 
 
 class DriverGetSerializer(serializers.ModelSerializer):

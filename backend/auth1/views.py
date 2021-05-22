@@ -6,13 +6,14 @@ from rest_framework.decorators import action
 from rest_framework import viewsets
 from .serializers import *
 from rest_framework.views import APIView
+from auth1.send_push import send_push
 
 # Create your views here.
 class RegisterDriverAPIView(APIView):
     http_method_names = ['post']
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             user.isDriver = True
@@ -25,7 +26,7 @@ class RegisterDriverAPIView(APIView):
 class RegisterPassengerAPIView(APIView):
     http_method_names = ['post']
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             user.isDriver = False
@@ -61,12 +62,17 @@ class PassengerViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
-class GenerateRegisterAPIView(APIView):
-    http_method_names = ['post']
 
-    def post(self, request):
-        for i in range(2):
-            serializer = UserSerializer(username="username", password="password")
-            if serializer.is_valid():
-                serializer.save()
-        return Response("OK")
+class GetToken(APIView):
+    http_method_names = ['get']
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        try:
+            to = User.objects.get(id=int(request.data.get('id')))
+            if to is not None:
+                return Response(status=200, data=to.token)
+        except Exception as e:
+            return Response(status=400, data="Couldn't find driver")
+
+
