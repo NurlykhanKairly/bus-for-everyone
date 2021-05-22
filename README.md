@@ -4,7 +4,7 @@ This is our submission for [JunctionX Seoul 2021](https://junctionx-seoul-2021.o
 [Here]() is our video demo.
 
 ## Screenshot
-![Screenshot](./assets/screenshot.png)
+![Screenshot](./assets/screenshot.PNG)
 
 ## Running
 
