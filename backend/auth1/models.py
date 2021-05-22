@@ -1,12 +1,12 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-# Create your models here.
 class User(AbstractUser):
+    isDriver = models.BooleanField(default=False)
+    years = models.IntegerField(default=0)
+    isSpecial = models.BooleanField(default=False)
+
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
@@ -19,12 +19,3 @@ class User(AbstractUser):
         return f'{self.id}: {self.username}'
 
 
-class Driver(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    years = models.IntegerField(default=0)
-
-
-class Passenger(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    spravka = models.FileField(default=None)
-    isSpecial = models.BooleanField(default=False)

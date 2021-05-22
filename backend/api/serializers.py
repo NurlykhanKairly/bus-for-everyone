@@ -1,14 +1,12 @@
 from rest_framework import serializers
+from auth1.models import User
+from api.models import *
 
+class BaseFeedbackSerializer(serializers.ModelSerializer):
+    driver = User
 
-# class BaseFeedbackSerializer(serializers.ModelSerializer):
-#     movie =
-#     like_count = serializers.SerializerMethodField('get_like_count')
-#
-#     class Meta:
-#         model = Comment
-#         fields = ('id', 'movie', 'created_by', 'created_at', 'content', 'like_count')
-#         read_only_fields = ('id', 'created_by', 'created_at', 'like_count')
-#
-#     def get_like_count(self, comment):
-#         return CommentLike.likes.get_comment_like(comment)
+    class Meta:
+        model = Feedback
+        fields = ('id', 'driver', 'created_by', 'created_at', 'content')
+        read_only_fields = ('id', 'created_by', 'created_at')
+

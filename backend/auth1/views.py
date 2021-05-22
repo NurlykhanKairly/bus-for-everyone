@@ -15,10 +15,11 @@ class RegisterDriverAPIView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            driver = Driver(user=user, years=0)
-            driver.save()
+            user.isDriver = True
+            user.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class RegisterPassengerAPIView(APIView):
@@ -27,25 +28,38 @@ class RegisterPassengerAPIView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            passenger = Passenger(user=user)
-            passenger.save()
+            user.isDriver = False
+            user.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = UserSerializer
+class DriverViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = DriverGetSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return User.objects.all()
+        return User.objects.all().filter(isDriver=True)
 
     @action(methods=['GET'], detail=False)
     def me(self, request):
-        serializer = self.get_serializer(request.user)
+        serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
+
+
+class PassengerViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = PassengerGetSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return User.objects.all().filter(isDriver=False)
+
+    @action(methods=['GET'], detail=False)
+    def me(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
 
 class GenerateRegisterAPIView(APIView):
     http_method_names = ['post']

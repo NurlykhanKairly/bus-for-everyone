@@ -8,14 +8,14 @@ from .models import *
 
 @admin.register(User)
 class UserAdmin(UserAdmin):
-    list_display = ('username', 'email')
+    list_display = ('username', 'email', 'isDriver')
 
 
-@admin.register(Driver)
-class DriverAdmin(admin.ModelAdmin):
-    pass
+# @admin.register(Driver)
+# class DriverAdmin(admin.ModelAdmin):
+#     pass
 
 
-@admin.register(Passenger)
-class PassengerAdmin(admin.ModelAdmin):
-    pass
+# @admin.register(Passenger)
+# class PassengerAdmin(admin.ModelAdmin):
+#     pass
