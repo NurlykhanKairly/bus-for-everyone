@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import DialogInput from 'react-native-dialog-input';
 
 const ProfileList = () => {
-    const [address, setAdress] = useState('Blah-blah-blah');
+    const [address, setAdress] = useState('Set your address');
     const [dialogue, setDialogue] = useState(false);
     return (
         <>

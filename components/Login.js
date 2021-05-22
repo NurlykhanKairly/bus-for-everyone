@@ -6,10 +6,11 @@ import {
   TextInput,
   KeyboardAvoidingView,
   TouchableOpacity,
-  AsyncStorage,
   Platform,
   ActivityIndicator,
 } from 'react-native';
+import deviceStorage from './deviceStorage';
+import GLOBALS from '../Globals';
 
 
 export default class Login extends React.Component {
@@ -23,47 +24,81 @@ export default class Login extends React.Component {
   }
 
   async componentDidMount() {
+    const value = await deviceStorage.retrieveItem('token'); // returns promise, await resolve
+    if (value !== null) {
+      this.props.navigation.navigate('Home');
+    }
     this.setState({ assetsLoaded: true });
   }
 
 
   render() {
-      if (!this.state.assetsLoaded) {
-        return (
-          <View style={styles.container}>
-            <ActivityIndicator size="large" color="#74B43F"/>
-          </View>
-        );
-      }
+    if (!this.state.assetsLoaded) {
       return (
-        <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} style={styles.wrapper}>
-          <View style={styles.container}>
-            <Text style={styles.header}>Authorization</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Enter e-mail"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              onChangeText={username => this.setState({ username })}
-              underlineColorAndroid="transparent"
-            />
-
-            <TextInput
-              style={styles.textInput}
-              placeholder="Enter password"
-              secureTextEntry
-              onChangeText={password => this.setState({ password })}
-              underlineColorAndroid="transparent"
-            />
-            <TouchableOpacity style={styles.btn} onPress={this.login}>
-              <Text style={styles.buttonText}>login</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+        <View style={styles.container}>
+          <ActivityIndicator size="large" color="#74B43F" />
+        </View>
       );
-}
+    }
+    return (
+      <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} style={styles.wrapper}>
+        <View style={styles.container}>
+          <Text style={styles.header}>Authorization</Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter username"
+            autoCapitalize="none"
+            onChangeText={username => this.setState({ username })}
+            underlineColorAndroid="transparent"
+          />
+
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter password"
+            secureTextEntry
+            onChangeText={password => this.setState({ password })}
+            underlineColorAndroid="transparent"
+          />
+          <TouchableOpacity style={styles.btn} onPress={this.login}>
+            <Text style={styles.buttonText}>login</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{marginTop: 20, ...styles.btn}} onPress={() => this.props.navigation.navigate('Register')}>
+            <Text style={styles.buttonText}>register</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
   login = () => {
-    ///TODO
+    fetch(GLOBALS.BASE_URL + '/auth1/login/', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username : this.state.username,
+        password : this.state.password
+      }),
+    })
+      .then(res => {
+        if (res.status === 200) {
+          deviceStorage.saveItem('token', res.text().token);
+          return true;
+        } else {
+          alert("Something went wrong...");
+          return false;
+        }
+      })
+      .then((success) => {
+        if (success)
+          this.props.navigation.navigate('Home');
+      })
+      .catch((err) => {
+        alert(err);
+      })
+      .done();
   };
 }
 
