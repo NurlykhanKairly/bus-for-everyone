@@ -50,7 +50,7 @@ const BusListScreen = ({navigation}) => {
             number: '15'
         },
     ]
-    console.log(bus);
+    
     return (
         <ScrollView >
             <FlatList
