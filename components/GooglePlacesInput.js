@@ -12,6 +12,7 @@ const GooglePlacesInput = () => {
       query={{
         key: 'AIzaSyC-VLuqTSdEQ7I3m_OjFU1RCMfZXKL5dOs',
         language: 'en',
+        components: 'country:kr',
       }}
     />
   );
