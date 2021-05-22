@@ -7,7 +7,7 @@ const ProfileList = () => {
             <View style = {styles.container}>
                 <Image
                     style={styles.picture}
-                    source={require('./images/personimage.jpg')}
+                    source={require('../images/personimage.jpg')}
                 />
                 <Text style = {{fontSize: 20, fontWeight: 'bold'}}>Name Surname</Text>
             </View>

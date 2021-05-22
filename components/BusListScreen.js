@@ -59,13 +59,15 @@ const BusListScreen = ({navigation}) => {
                 renderItem = {({item}) => {
                     return (
                         <View style = {styles.containerless}>
-                            <TouchableOpacity  onPress = {() => setBus(item.number)}>
+                            <TouchableOpacity  onPress = {() => {
+                                setBus(item.number);
+                                navigation.goBack();
+                            }}>
                                 <View style = {styles.row}>
                                     <Text style = {styles.bus}>{item.number} - blah blah blah blah blah </Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
-                        // Need a callback to previous screen
                     )
                 }}
             />
