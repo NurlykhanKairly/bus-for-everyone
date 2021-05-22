@@ -1,12 +1,17 @@
 import React, {useState,useEffect}from 'react'
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import *as Location from 'expo-location';
-import { Input } from 'react-native-elements';
+import BusInfo from './BusInfo';
+import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
 
 
 const MapSearch = ({region, setRegion}) => {
     
     const [errorMsg, setErrorMsg] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [destination, setDestination] = useState('');
+    const [activeSearchBar, setActiveSearchBar] = useState(true);
+
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -27,7 +32,13 @@ const MapSearch = ({region, setRegion}) => {
             text = JSON.stringify(region);
         }
     return (<>
-        { region && (
+        <Modal visible={modalVisible} onRequestClose={() => {
+          setModalVisible(!modalVisible);
+          setActiveSearchBar(true);
+        }} transparent={true}>
+            <BusInfo destination={destination}/>
+        </Modal>
+        { region && activeSearchBar && (
         <GooglePlacesAutocomplete
         placeholder="Search"
         fetchDetails={true}
@@ -36,11 +47,13 @@ const MapSearch = ({region, setRegion}) => {
 
         }}
         onPress={(data, details = null)=>{
-            console.log(data,details)
+            console.log(data.description,details)
+            setModalVisible(true);
+            setDestination(data.description);
+            setActiveSearchBar(false);
             setRegion({
                 latitude: details.geometry.location.lat,
                 longitude: details.geometry.location.lng
-                
             })
         }}
         query={{
@@ -52,12 +65,7 @@ const MapSearch = ({region, setRegion}) => {
             location: `${region.latitude}, ${region.longitude}`
         }}
         enablePoweredByContainer={false}
-        textInputProps={{
-            InputComp: Input,
-            rightIcon: { type: 'font-awesome', name: 'search' },
-            errorStyle: { color: 'red' },
-          }}
-    
+        
         styles={{
             container: {flex: 1,position:"absolute",width:"100%", zIndex:2, marginTop: 10, paddingHorizontal: 10},
             textInputContainer : {borderRadius: 5, borderRadius: 20},
