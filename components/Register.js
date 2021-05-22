@@ -64,7 +64,7 @@ export default class Register extends React.Component {
                         underlineColorAndroid="transparent"
                     />
                     <TouchableOpacity style={styles.btn} onPress={this.register}>
-                        <Text style={styles.buttonText}>login</Text>
+                        <Text style={styles.buttonText}>register</Text>
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
