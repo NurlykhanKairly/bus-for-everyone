@@ -8,13 +8,17 @@ This is our submission for [JunctionX Seoul 2021](https://junctionx-seoul-2021.o
 
 ## Running
 
-From the root folder run expo server
-
+Instal expo cli
 ```sh
-npm i
+npm install --global expo-cli
 ```
 
-Run frontend application:
+From the root folder run expo server
+```sh
+npm install
+```
+
+From the root folder run expo server
 ```sh
 npm start
 ```
