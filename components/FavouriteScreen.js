@@ -1,10 +1,13 @@
-import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
+import DialogInput from 'react-native-dialog-input';
 
 const ProfileList = () => {
+    const [address, setAdress] = useState('Blah-blah-blah');
+    const [dialogue, setDialogue] = useState(false);
     return (
         <>
             <View style = {styles.container}>
@@ -12,9 +15,11 @@ const ProfileList = () => {
                     <Entypo name="home" size={30} color="#146BCA" style = {{marginLeft: 20, marginTop: 5}}/>
                     <View style = {{marginLeft: 15, marginVertical: 5, justifyContent:'space-between'}}>
                         <Text style = {{fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>Home</Text>
-                        <Text>Blah-blah-blah</Text>
+                        <Text>{address}</Text>
                     </View>
-                    <MaterialIcons name="edit" size={20} color="black" style = {{marginLeft: 160, marginTop: 5}}/>
+                    <TouchableOpacity onPress = {() => setDialogue(true)}>
+                        <MaterialIcons name="edit" size={20} color="black" style = {{marginLeft: 160, marginTop: 5}}/>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style = {styles.container2}>
@@ -41,6 +46,16 @@ const ProfileList = () => {
                     <Text style = {{marginLeft: 20}}>Address 4</Text>
                 </View>
             </View>
+            <DialogInput isDialogVisible={dialogue}
+                    title={"New home address"}
+                    message={"Please type your new home address"}
+                    hintInput ={"Address"}
+                    submitInput={ (inputText) => {
+                        setAdress(inputText);
+                        setDialogue(false);
+                    } }
+                    closeDialog={ () => {setDialogue(false)}}>
+            </DialogInput>
         </>
     )
 };
