@@ -36,7 +36,7 @@ const MapSearch = ({region, setRegion}) => {
           setModalVisible(!modalVisible);
           setActiveSearchBar(true);
         }} transparent={true}>
-            <BusInfo destination={destination}/>
+            <BusInfo destination={destination.substr(0, destination.indexOf(','))}/>
         </Modal>
         { region && activeSearchBar && (
         <GooglePlacesAutocomplete

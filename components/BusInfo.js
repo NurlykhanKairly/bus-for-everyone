@@ -1,11 +1,19 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, Alert, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Image, Alert, TextInput,Modal } from 'react-native';
 import { Button } from 'react-native-elements';
 
 const BusInfo = (props) => {
     var [ isPress, setIsPress ] = React.useState(false);
     var [ source, setSource] = React.useState('Current location');
-    var [ destination, setDestination ] = React.useState(null);
+    var [ destination, setDestination ] = React.useState({...props.destination});
+    var [modalVisible, setModalVisible] = React.useState(false);
+    var [fromToVisible, setFromToVisible] = React.useState(true);
+    var timeoutHandle;
+
+    React.useEffect(() => {
+        setDestination(props.destination);
+    }, [props.destination])
+  
 
     const title = () => {
         if (isPress)
@@ -14,31 +22,71 @@ const BusInfo = (props) => {
             return (<Text style={{color: '#0641A0', fontWeight: 'bold'}}>Notify the driver</Text>)
     }
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.fromTo}>
-                <TextInput 
-                    editable={false}
-                    placeholder="From"
-                    style={{paddingTop: 15, paddingLeft: 10, paddingBottom: 5, backgroundColor: 'white', borderTopRightRadius:20, borderTopLeftRadius:20}}
-                    onChangeText={source => {
-                        setSource(source)
-                        console.log(source)
-                    }}
-                    defaultValue={source}
-                />
-                <View
+    var LineBreak = (
+            <View
                     style={{
                         borderBottomColor: 'lightgray',
                         borderBottomWidth: 1,
                         marginLeft: 10,
                         marginRight: 10
                     }}
+            />
+        )
+    onDeleteBTN = () => {
+        // TODO: show 
+        setModalVisible(true)
+        setFromToVisible(false)
+    }
+
+    return (
+        <View style={styles.container}>
+            <Modal 
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose = {() => {
+                    setModalVisible(!modalVisible)
+                    setFromToVisible(!fromToVisible)
+                    console.log('modal closed')
+                }}
+            >
+                <View style={styles.fromTo}>
+                    <Text 
+                        style={[styles.from, {fontSize: 18}]}
+                    > 
+                        {destination}
+                    </Text>
+                    { LineBreak }
+                    
+                    <View
+                        style={styles.to}
+                    >
+                        <Text style={{fontWeight: 'bold', fontSize: 16}}>Arriving</Text>
+                        <View style={ [styles.items, {marginLeft: 10}] } >
+                            <Image source={require('../assets/bus.png')} />
+                            <Text style={styles.number}>172</Text>
+                            <Text style={styles.arrives}>Arrives in 6 minutes</Text>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+            
+            { fromToVisible && (
+            <View style={styles.fromTo}>
+                <TextInput 
+                    editable={false}
+                    placeholder="From"
+                    style={styles.from}
+                    onChangeText={source => {
+                        setSource(source)
+                        console.log(source)
+                    }}
+                    defaultValue={source}
                 />
+                { LineBreak }
                 <TextInput
                     editable={false} 
                     placeholder="To"
-                    style={{paddingTop: 10, paddingLeft: 10, paddingBottom: 15, backgroundColor:"white", borderBottomLeftRadius:20, borderBottomRightRadius:20}}
+                    style={styles.to}
                     onChangeText={destination => {
                         setDestination(destination)
                         console.log(destination)
@@ -46,6 +94,9 @@ const BusInfo = (props) => {
                     defaultValue={props.destination}
                 />
             </View>
+            )}
+            
+            { fromToVisible && (
             <View style={styles.busWrapper}>
                 <View style={styles.items}>
                     <Image source={require('../assets/bus.png')} />
@@ -61,11 +112,24 @@ const BusInfo = (props) => {
                     <Button 
                         title={title}
                         onPress={() =>  {
-                            if (isPress) 
+                            if (isPress) {
+                                console.log('alert');    
                                 Alert.alert('Already notified');
-                            console.log(isPress);
-                            setIsPress(true);
-                            console.log('alert');
+                            } else {
+                                timeoutHandle = setTimeout(()=>{
+                                    Alert.alert(
+                                        'The driver is notified',
+                                        '',
+                                        [
+                                            {text: 'OK', onPress: onDeleteBTN},
+                                        ],
+                                    )
+                                    console.log('5 secs passed')
+                                    
+                                    // Add your logic for the transition
+                                }, 5000);
+                                setIsPress(true);
+                            }
                         } }
                         buttonStyle={{
                             backgroundColor: (isPress ? 'lightgray' : '#FFE600'),
@@ -76,6 +140,7 @@ const BusInfo = (props) => {
                     />
                 </View>
             </View>
+            )}
         </View>
     );
 }
@@ -86,6 +151,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
+    smallbus: {
+        width: 20,
+        height: 24,
+        marginTop: 10,
+        marginLeft: 10,
+    },
     fromTo: {
         alignSelf: 'center',
         borderColor: 'lightgray',
@@ -94,12 +165,28 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 15,
         right: 15,
-        top: 20,
+        top: 50,
+    },
+    from: {
+        paddingTop: 20, 
+        paddingLeft: 10, 
+        paddingBottom: 15, 
+        backgroundColor: 'white', 
+        borderTopRightRadius:20, 
+        borderTopLeftRadius:20
+    },
+    to: {
+        paddingTop: 15, 
+        paddingLeft: 10, 
+        paddingBottom: 20, 
+        backgroundColor:"white", 
+        borderBottomLeftRadius:20, 
+        borderBottomRightRadius:20
     },
     busWrapper: {
         backgroundColor : 'white',
         position: 'absolute',
-        bottom: 30,
+        bottom: 70,
         left: 15,
         right: 15,
         paddingHorizontal: 20,
