@@ -63,7 +63,7 @@ const BusInfo = (props) => {
                         <Text style={{fontWeight: 'bold', fontSize: 16}}>Arriving</Text>
                         <View style={ [styles.items, {marginLeft: 10}] } >
                             <Image source={require('../assets/bus.png')} />
-                            <Text style={styles.number}>172</Text>
+                            <Text style={styles.number}>360</Text>
                             <Text style={styles.arrives}>Arrives in 6 minutes</Text>
                         </View>
                     </View>
@@ -100,7 +100,7 @@ const BusInfo = (props) => {
             <View style={styles.busWrapper}>
                 <View style={styles.items}>
                     <Image source={require('../assets/bus.png')} />
-                    <Text style={styles.number}>172</Text>
+                    <Text style={styles.number}>360</Text>
                     <Text style={styles.arrives}>Arrives in 6 minutes</Text>
                 </View>
                 <View style={styles.accessible}>
