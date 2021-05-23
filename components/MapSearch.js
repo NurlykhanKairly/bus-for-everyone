@@ -14,14 +14,7 @@ const MapSearch = ({region, setRegion}) => {
 
     useEffect(() => {
         (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-            setErrorMsg('Permission to access location was denied');
-            return;
-            }
-    
-            let currentlocation = await Location.getCurrentPositionAsync({});
-            setRegion({latitude: currentlocation.coords.latitude,longitude: currentlocation.coords.longitude});
+            setRegion({latitude: 37.547043,longitude: 126.990522});
         })();
         }, []);
     
