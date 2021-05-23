@@ -9,20 +9,20 @@ const ProfileList = () => {
                     style={styles.picture}
                     source={require('../images/personimage.jpg')}
                 />
-                <Text style = {{fontSize: 20, fontWeight: 'bold'}}>Name Surname</Text>
+                <Text style = {{fontSize: 20, fontWeight: 'bold'}}>Tom Riddle</Text>
             </View>
             <View style = {styles.container2}>
                 <View style = {styles.row}>
                     <Text style = {{fontSize: 18, fontWeight: 'bold'}}>Nickname</Text>
-                    <Text style = {{fontSize: 18}}>nickname</Text>
+                    <Text style = {{fontSize: 18}}>Voldemort</Text>
                 </View>
                 <View style = {styles.row}>
                     <Text style = {{fontSize: 18, fontWeight: 'bold'}}>Phone number</Text>
-                    <Text style = {{fontSize: 18}}>000-000-0000</Text>
+                    <Text style = {{fontSize: 18}}>010-8888-8888</Text>
                 </View>
                 <View style = {styles.row2}>
                     <Text style = {{fontSize: 18, fontWeight: 'bold'}}>E-mail</Text>
-                    <Text style = {{fontSize: 18}}>email@gmail.com</Text>
+                    <Text style = {{fontSize: 18}}>voldemort@gmail.com</Text>
                 </View>
             </View>
         </>
